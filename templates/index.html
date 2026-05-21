@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Study Buddy — AI Learning Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a class="nav-logo" href="#hero">
+        <span class="logo-icon">✦</span> Study Buddy
+      </a>
+      <div class="nav-links">
+        <a href="#notes-section" class="nav-link">Notes</a>
+        <a href="#flashcards-section" class="nav-link">Flashcards</a>
+        <a href="#quiz-section" class="nav-link">Quiz</a>
+        <a href="#recall-section" class="nav-link">Recall</a>
+        <a href="#progress-section" class="nav-link nav-link--cta">Progress</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="#notes-section" class="nav-link">Notes</a>
+      <a href="#flashcards-section" class="nav-link">Flashcards</a>
+      <a href="#quiz-section" class="nav-link">Quiz</a>
+      <a href="#recall-section" class="nav-link">Recall</a>
+      <a href="#progress-section" class="nav-link">Progress</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+      <div class="grid-overlay"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">Powered by Gemini AI ✦</div>
+      <h1 class="hero-headline">Study Smarter<br>with <span class="gradient-text">AI</span></h1>
+      <p class="hero-subtitle">Generate notes, flashcards, quizzes, and active recall sessions from any topic — instantly.</p>
+      <div class="hero-actions">
+        <a href="#input-section" class="btn btn-primary">Start Learning →</a>
+        <a href="#progress-section" class="btn btn-ghost">View Progress</a>
+      </div>
+      <div class="hero-tools">
+        <div class="tool-chip">📝 Smart Notes</div>
+        <div class="tool-chip">🃏 Flashcards</div>
+        <div class="tool-chip">🎯 Quizzes</div>
+        <div class="tool-chip">🧠 Active Recall</div>
+      </div>
+    </div>
+    <div class="scroll-hint">scroll down ↓</div>
+  </section>
+
+  <!-- TOPIC INPUT -->
+  <section class="section" id="input-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">What do you want to <span class="gradient-text">learn?</span></h2>
+        <p class="section-sub">Enter a topic, pick your level, and choose a study mode.</p>
+      </div>
+      <div class="input-card glass-card">
+        <div class="input-group">
+          <label class="input-label" for="topic-input">Topic</label>
+          <input type="text" id="topic-input" class="topic-input" placeholder="e.g. Photosynthesis, World War II, Python Decorators…" autocomplete="off"/>
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label class="input-label">Learning Level</label>
+            <div class="level-pills">
+              <button class="level-pill active" data-level="Beginner">Beginner</button>
+              <button class="level-pill" data-level="Intermediate">Intermediate</button>
+              <button class="level-pill" data-level="Advanced">Advanced</button>
+            </div>
+          </div>
+        </div>
+        <div class="mode-grid">
+          <button class="mode-btn" data-mode="notes" onclick="generateNotes()">
+            <span class="mode-icon">📝</span>
+            <span class="mode-label">Learning Notes</span>
+          </button>
+          <button class="mode-btn" data-mode="flashcards" onclick="generateFlashcards()">
+            <span class="mode-icon">🃏</span>
+            <span class="mode-label">Flashcards</span>
+          </button>
+          <button class="mode-btn" data-mode="quiz" onclick="generateQuiz()">
+            <span class="mode-icon">🎯</span>
+            <span class="mode-label">Quiz</span>
+          </button>
+          <button class="mode-btn" data-mode="recall" onclick="generateRecall()">
+            <span class="mode-icon">🧠</span>
+            <span class="mode-label">Active Recall</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOTES OUTPUT -->
+  <section class="section" id="notes-section" style="display:none">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">📝 Learning <span class="gradient-text">Notes</span></h2>
+      </div>
+      <div class="glass-card notes-card" id="notes-output"></div>
+    </div>
+  </section>
+
+  <!-- FLASHCARDS OUTPUT -->
+  <section class="section" id="flashcards-section" style="display:none">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">🃏 <span class="gradient-text">Flashcards</span></h2>
+        <p class="section-sub">Click a card to reveal the answer.</p>
+      </div>
+      <div class="flashcard-nav">
+        <button class="btn btn-ghost btn-sm" id="fc-prev" onclick="prevCard()">← Prev</button>
+        <span class="fc-counter" id="fc-counter">1 / 10</span>
+        <button class="btn btn-ghost btn-sm" id="fc-next" onclick="nextCard()">Next →</button>
+      </div>
+      <div class="flashcard-stage" id="flashcard-stage">
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+          <div class="flashcard-inner" id="flashcard-inner">
+            <div class="flashcard-face flashcard-front" id="fc-front"></div>
+            <div class="flashcard-face flashcard-back" id="fc-back"></div>
+          </div>
+        </div>
+      </div>
+      <div class="fc-hint">Click card to flip</div>
+    </div>
+  </section>
+
+  <!-- QUIZ OUTPUT -->
+  <section class="section" id="quiz-section" style="display:none">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">🎯 <span class="gradient-text">Quiz</span></h2>
+      </div>
+      <div id="quiz-output"></div>
+      <div class="quiz-result glass-card" id="quiz-result" style="display:none">
+        <div class="result-emoji" id="result-emoji">🎉</div>
+        <h3 class="result-score" id="result-score">Score: 0 / 5</h3>
+        <p class="result-msg" id="result-msg"></p>
+        <button class="btn btn-primary" onclick="generateQuiz()">Try Again</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTIVE RECALL -->
+  <section class="section" id="recall-section" style="display:none">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">🧠 Active <span class="gradient-text">Recall</span></h2>
+        <p class="section-sub">Type your answer — the AI will give you personalised feedback.</p>
+      </div>
+      <div id="recall-output"></div>
+    </div>
+  </section>
+
+  <!-- PROGRESS DASHBOARD -->
+  <section class="section" id="progress-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">📊 Your <span class="gradient-text">Progress</span></h2>
+        <button class="btn btn-ghost btn-sm" onclick="clearProgress()">Reset</button>
+      </div>
+      <div class="progress-grid">
+        <div class="stat-card glass-card">
+          <div class="stat-icon">📚</div>
+          <div class="stat-value" id="stat-topics">0</div>
+          <div class="stat-label">Topics Studied</div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-icon">🃏</div>
+          <div class="stat-value" id="stat-flashcards">0</div>
+          <div class="stat-label">Flashcards Reviewed</div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-value" id="stat-quizscore">—</div>
+          <div class="stat-label">Last Quiz Score</div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-icon">🧠</div>
+          <div class="stat-value" id="stat-recalls">0</div>
+          <div class="stat-label">Recall Attempts</div>
+        </div>
+      </div>
+      <div class="topics-list glass-card" id="topics-list">
+        <h3 class="topics-title">Topics Explored</h3>
+        <div id="topics-chips"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOADING OVERLAY -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loader-card">
+      <div class="spinner"></div>
+      <p class="loader-text" id="loader-text">Thinking…</p>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <footer class="footer">
+    <p>Study Buddy &copy; 2024 — Built with ✦ and Gemini AI</p>
+  </footer>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
